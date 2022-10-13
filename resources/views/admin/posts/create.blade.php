@@ -17,7 +17,7 @@
                 </div>
             @enderror
 
-            <div class="mb-3">
+            <div class="mb-4">
                 <label for="selectCategory">Category</label><br>
                 <select name="category_id" id="selectCategory" class="form-control @error('category_id') is-invalid @enderror">
                     <option {{old('category_id')==''?'selected':''}} value="">-</option>
@@ -32,6 +32,15 @@
                     {{$message}}
                 </div>
             @enderror
+
+            <div class="form-check mb-4">
+                @foreach ($tags as $tag)
+                    <input name="tags_id[]" class="form-check-input" type="checkbox" value="{{$tag->id}}" id="{{$tag->name}}">
+                    <label class="form-check-label mr-4" for="{{$tag->name}}">
+                        {{$tag->name}}
+                    </label>
+                @endforeach
+            </div>
 
             <div class="form-floating mb-4">
                 <label for="floatingTextarea">Content</label>
