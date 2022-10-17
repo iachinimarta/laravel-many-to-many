@@ -45,7 +45,8 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|max:50',
             'content' => 'required|max:65535',
-            'category_id' => 'nullable|exists:categories,id'
+            'category_id' => 'nullable|exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
 
         $data = $request->all();
@@ -66,6 +67,10 @@ class PostController extends Controller
         $newPost->slug = $slug;
 
         $newPost->save();
+
+        if (array_key_exists('tags', $data)) {
+            $newPost->tags()->sync($data['tags']);
+        }
 
         return redirect()->route('admin.posts.index')->with('status', 'Post creato con successo!');
 
@@ -94,7 +99,8 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $categories = Category::all();
-        return view('admin.posts.edit', ['post' => $post, 'categories' => $categories]);
+        $tags = Tag::all();
+        return view('admin.posts.edit', ['post' => $post, 'categories' => $categories, 'tags' => $tags]);
     }
 
     /**
@@ -109,7 +115,8 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|max:50',
             'content' => 'required|max:65535',
-            'category_id' => 'nullable|exists:categories,id'
+            'category_id' => 'nullable|exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
 
         $data = $request->all();
@@ -132,6 +139,12 @@ class PostController extends Controller
 
         $updatedPost->update($data);
 
+        if (array_key_exists('tags', $data)) {
+            $updatedPost->tags()->sync($data['tags']);
+        } else {
+            $updatedPost->tags()->sync([]);
+        }
+
         return redirect()->route('admin.posts.index')->with('status', 'Post modificato con successo!');
     }
 
@@ -144,7 +157,7 @@ class PostController extends Controller
     public function destroy($id)
     {
         $deletedPost = Post::find($id);
-
+        $deletedPost->tags()->sync([]);
         $deletedPost->delete();
         return redirect()->route('admin.posts.index')->with('status', 'Post eliminato con successo!');
     }

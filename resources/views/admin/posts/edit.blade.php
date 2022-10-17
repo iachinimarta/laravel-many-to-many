@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">Create
+    <div class="container">
         <form action="{{route('admin.posts.update', ['post' => $post->id])}}" method="POST">
 
             @csrf
@@ -29,6 +29,35 @@
             </div>
 
             @error('category_id')
+                <div class="invalid-feedback">
+                    {{$message}}
+                </div>
+            @enderror
+
+            <div class="form-check mb-4">
+                @foreach ($tags as $tag)
+                    @if ($errors->any())
+                        <input 
+                        {{(in_array($tag->id, old('tags', [])))?'checked':''}} 
+                        name="tags[]" 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        value="{{$tag->id}}" 
+                        id="tag_{{$tag->id}}">
+                    @else
+                        <input 
+                        {{($post->tags->contains($tag))?'checked':''}} 
+                        name="tags[]" 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        value="{{$tag->id}}" 
+                        id="tag_{{$tag->id}}">    
+                    @endif      
+                    <label class="form-check-label mr-4" for="tag_{{$tag->id}}">{{$tag->name}}</label>
+                @endforeach
+            </div>
+
+            @error('tags')
                 <div class="invalid-feedback">
                     {{$message}}
                 </div>

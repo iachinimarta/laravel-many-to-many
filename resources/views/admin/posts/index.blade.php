@@ -3,7 +3,6 @@
 @section('content')
 
     <div class="container">
-        <div>Index</div>
         <div class="d-flex justify-content-end mb-3">
             <button type="button" class="btn btn-success">
                 <a href="{{route('admin.posts.create')}}">New</a>
@@ -17,6 +16,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Slug</th>
                     <th scope="col">Category</th>
+                    <th scope="col">Tags</th>
                     <th scope="col" class="text-center">Action</th>
                 </tr>
                 </thead>
@@ -28,6 +28,11 @@
                     <td>{{$post->title}}</td>
                     <td>{{$post->slug}}</td>
                     <td>{{$post->category?$post->category->name:'undefined'}}</td>
+                    <td>
+                        @foreach ($post->tags as $tag)
+                            {{ $tag->name }};
+                        @endforeach
+                    </td>
                     <td>
                         <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-info">
