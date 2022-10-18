@@ -54,7 +54,6 @@
                 
             </tbody>
         </table>
-
-        <a href="{{route('admin.categories.index')}}">Categories</a>
+        <a class="btn btn-info text" href="{{route('admin.')}}"><-</a>  
     </div>
 @endsection
